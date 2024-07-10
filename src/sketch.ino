@@ -1,19 +1,24 @@
-const int motorPin = 9; // PWM pin connected to the transistor base
+#include <Servo.h>
+
+Servo myServo;
+const int servoPin = 5;
 
 void setup() {
-  pinMode(motorPin, OUTPUT);
+  myServo.attach(servoPin);
+  //pinMode(servoPin, OUTPUT);
 }
 
 void loop() {
-  // Gradually increase the motor speed
-  for (int speed = 0; speed <= 255; speed++) {
-    digitalWrite(motorPin, 1/speed);
-    delay(10);
-  }
+  // Set pulse width directly (1000 to 2000 microseconds for 0 to 180 degrees)
+  myServo.writeMicroseconds(1500);  // Center position
+  delay(1000);  // Wait for 1 second
+
+  myServo.writeMicroseconds(1000);  // 0 degrees
+  delay(1000);  // Wait for 1 second
+
+  myServo.writeMicroseconds(2000);  // 180 degrees
+  delay(1000);  // Wait for 1 second
+
   
-  // Gradually decrease the motor speed
-  for (int speed = 255; speed >= 0; speed--) {
-    digitalWrite(motorPin, 1/speed);
-    delay(10);
-  }
+  myServo.read()
 }
