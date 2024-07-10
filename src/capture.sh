@@ -1,5 +1,8 @@
 #!/bin/bash
 
-ffmpeg -f v4l2 -i /dev/video2 -f rawvideo -pix_fmt yuyv422 - | ffplay -f rawvideo -infbuf -framedrop -fs -pixel_format yuyv422 -video_size 640x480 - &
-sleep 4
-maim -u -f png -q -i `xdotool getactivewindow` > "$PWD"/sc.png &
+rm -rf capture
+mkdir capture
+
+vid=$(v4l2-ctl --list-devices | grep -A 1 "Trust" | grep "video" | cut -d '/' -f 3)
+
+ffmpeg -f v4l2 -i /dev/"$vid" -frames:v 5 -c:v libx264 -preset fast -pix_fmt yuv420p ./capture/output.mp4
