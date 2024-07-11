@@ -16,7 +16,7 @@ fn handle_client(stream: TcpStream) {
             }
             Ok(_) => {
                 println!("Received: {}", buffer.trim());
-                if buffer.as_str().trim() == "GET /l"  {
+                if buffer.as_str().trim().starts_with("GET /l")  {
                     println!("Received: {}", buffer.trim());
                     std::process::Command::new("sh")
                         .arg("-c")
@@ -24,7 +24,7 @@ fn handle_client(stream: TcpStream) {
                         .spawn()
                         .expect("Failed to execute command");
                 }
-                if buffer.as_str().trim() == "GET /r" {
+                if buffer.as_str().trim().starts_with("GET /r") {
                     println!("Received: {}", buffer.trim());
                     std::process::Command::new("sh")
                         .arg("-c")
