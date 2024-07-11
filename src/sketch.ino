@@ -6,39 +6,22 @@ void setup() {
     pinMode(pwm2, OUTPUT);
 }
 
-void loop() {
-  for (int i = 0; i <= 255; i++) {
-    analogWrite(pwm1, i);
-    digitalWrite(pwm2, LOW);
-
-    delay(4000/255);
-  }
-  delay(100);
-  
-
-  for (int i = 255; i >= 0; i--) {
-    analogWrite(pwm1, i);
-    digitalWrite(pwm2, LOW);
-
-    delay(4000/255);
-  }
-
-  
-  delay(100);
-
-  for (int i = 0; i <= 255; i++) {
-    analogWrite(pwm2, i);
-    digitalWrite(pwm1, LOW);
-
-    delay(4000/255);
-  }
-
-  delay(100);
-  
-  for (int i = 255; i >= 0; i--) {
-    analogWrite(pwm2, i);
-    digitalWrite(pwm1, LOW);
-
-    delay(4000/255);
-  }
+void left(int speed, int time) {
+  digitalWrite(pwm2, LOW);
+  analogWrite(pwm1, speed);
+  delay(time);
 }
+
+void right(int speed, int time) {
+  digitalWrite(pwm1, LOW);
+  analogWrite(pwm2, speed);
+  delay(time);
+}
+
+void loop() {
+    left(255, 500);
+    delay(100);
+    right(255, 500);
+    delay(100);
+}
+
