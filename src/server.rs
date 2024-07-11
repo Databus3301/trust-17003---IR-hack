@@ -1,17 +1,43 @@
 use std::net::{TcpListener, TcpStream};
-use std::io::{Read, Write};
+use std::io::{BufReader, BufRead, Write};
 
-fn handle_client(mut stream: TcpStream) {
+fn handle_client(stream: TcpStream) {
     println!("Client connected: {:?}", stream.peer_addr().unwrap());
 
-    let mut buffer = [0; 1024];
-    while let Ok(bytes_read) = stream.read(&mut buffer) {
-        if bytes_read == 0 {
-            break;
-        }
+    let mut reader = BufReader::new(&stream);
+    let mut buffer = String::new();
 
-        // Echo back the received data
-        stream.write_all(&buffer[..bytes_read]).unwrap();
+    loop {
+        buffer.clear();
+        match reader.read_line(&mut buffer) {
+            Ok(0) => {
+                println!("Client disconnected");
+                break; // Connection closed
+            }
+            Ok(_) => {
+                println!("Received: {}", buffer.trim());
+                if buffer.as_str().trim() == "GET /l"  {
+                    println!("Received: {}", buffer.trim());
+                    std::process::Command::new("sh")
+                        .arg("-c")
+                        .arg("./control.sh l")
+                        .spawn()
+                        .expect("Failed to execute command");
+                }
+                if buffer.as_str().trim() == "GET /r" {
+                    println!("Received: {}", buffer.trim());
+                    std::process::Command::new("sh")
+                        .arg("-c")
+                        .arg("./control.sh r")
+                        .spawn()
+                        .expect("Failed to execute command");
+                }
+            }
+            Err(e) => {
+                eprintln!("Error reading from client: {}", e);
+                break;
+            }
+        }
     }
 }
 
