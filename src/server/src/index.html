@@ -8,7 +8,7 @@
     <h1>Welcome to Remote-Control</h1>
 
     <h4>these buttons control a servo motor turning a 2€ webcam <br>
-        I removed the infrared filter off.
+        I removed the infrared filter from.
     </h4>
 
     <button onclick="redirect('r')">right</button>
@@ -23,8 +23,19 @@
 
 
 <style>
-    h1, h4, button {
-        align-content: center;
+    h1, h4 {
+        display: flex;
+        justify-content: center;
+    }
+    button {
+        margin-left: 20%;
+        padding-left: 10%;
+        padding-right: 10%;
+        padding-top: 10%;
+
+        display: inline-flex;
+        justify-content: center;
+
     }
 </style>
 </html>
