@@ -68,5 +68,6 @@ fn serve_html(mut stream: &mut TcpStream, html: &str) {
 
 fn server_html(mut stream: &mut TcpStream, file_path: &str) {
     let contents: String = std::fs::read_to_string(file_path).expect("Failed to read file");
-    serve_html(&mut stream, &contents);
+    let response = format!("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{}", contents);
+    serve_html(&mut stream, &response);
 }
