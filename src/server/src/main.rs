@@ -7,14 +7,13 @@ fn handle_client(mut stream: TcpStream) {
     stream.set_read_timeout(Option::from(Duration::new(3, 0))).expect("failed to set timeout");
 
     loop {
-        let mut contents = [0; 8];
-        match stream.read_exact(&mut contents) {
+        let mut contents = [0; 1024];
+        match stream.read(&mut contents) {
             Ok(_) => {
                 let contents: String = contents.as_mut().iter().map(|&c| c as char).collect();
                 for l in contents.lines().into_iter() {
                     if l.starts_with("GET / ") {
                         serve_html_file(&mut stream, "./src/index.html");
-                        serve_image_file(&mut stream, "./res/image.jpg");
                     }
                     if l.starts_with("GET /l") {
                         control("l");
@@ -23,6 +22,10 @@ fn handle_client(mut stream: TcpStream) {
                     if l.starts_with("GET /r") {
                         control("r");
                         serve_html_file(&mut stream, "./src/redirect.html");
+                    }
+                    if l.starts_with("GET /image.jpg") {
+                        println!("serving image");
+                        serve_image_file(&mut stream, "./res/image.jpg");
                     }
                 }
             }
