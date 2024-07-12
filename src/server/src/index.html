@@ -5,6 +5,26 @@
     <title>CamControl</title>
 </head>
 <body>
-    <p>Hello World!</p>
+    <h1>Welcome to Remote-Control</h1>
+
+    <h4>these buttons control a servo motor turning a 2€ webcam <br>
+        I removed the infrared filter off.
+    </h4>
+
+    <button onclick="redirect('r')">right</button>
+    <button onclick="redirect('l')">left</button>
 </body>
+
+<script>
+    function redirect(p) {
+        window.location.href = "/"+p;
+    }
+</script>
+
+
+<style>
+    h1, h4, button {
+        align-content: center;
+    }
+</style>
 </html>

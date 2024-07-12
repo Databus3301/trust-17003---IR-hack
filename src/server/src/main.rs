@@ -13,15 +13,15 @@ fn handle_client(mut stream: TcpStream) {
                 let contents: String = contents.as_mut().iter().map(|&c| c as char).collect();
                 for l in contents.lines().into_iter() {
                     if l.starts_with("GET / ") {
-                        server_html(&mut stream, "./src/index.html");
+                        serve_html_file(&mut stream, "./src/index.html");
                     }
                     if l.starts_with("GET /l") {
                         control("l");
-                        serve_html(&mut stream, "HTTP/1.1 200 OK\r\n")
+                        serve_html_file(&mut stream, "./src/redirect.html");
                     }
                     if l.starts_with("GET /r") {
                         control("r");
-                        serve_html(&mut stream, "HTTP/1.1 200 OK\r\n")
+                        serve_html_file(&mut stream, "./src/redirect.html");
                     }
                 }
             }
@@ -55,6 +55,7 @@ fn control(sequence: &str) {
         .arg(format!("../control.sh {}", sequence))
         .spawn()
         .expect("Failed to execute command");
+    
 }
 
 fn serve_html(mut stream: &mut TcpStream, html: &str) {
@@ -66,7 +67,7 @@ fn serve_html(mut stream: &mut TcpStream, html: &str) {
     }
 }
 
-fn server_html(mut stream: &mut TcpStream, file_path: &str) {
+fn serve_html_file(mut stream: &mut TcpStream, file_path: &str) {
     let contents: String = std::fs::read_to_string(file_path).expect("Failed to read file");
     let response = format!("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{}", contents);
     serve_html(&mut stream, &response);
