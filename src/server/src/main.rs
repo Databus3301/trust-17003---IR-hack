@@ -1,3 +1,4 @@
+use std::fmt::format;
 use std::net::{TcpListener, TcpStream};
 use std::io::{Write, Read};
 use std::time::Duration;
@@ -12,18 +13,10 @@ fn handle_client(mut stream: TcpStream) {
                 let contents: String = contents.as_mut().iter().map(|&c| c as char).collect();
                 for l in contents.lines().into_iter() {
                     if l.starts_with("GET /l") {
-                        std::process::Command::new("sh")
-                            .arg("-c")
-                            .arg("../control.sh l")
-                            .spawn()
-                            .expect("Failed to execute command");
+                        control("l");
                     }
                     if l.starts_with("GET /r") {
-                        std::process::Command::new("sh")
-                            .arg("-c")
-                            .arg("../control.sh r")
-                            .spawn()
-                            .expect("Failed to execute command");
+                        control("r");
                     }
                     stream.set_read_timeout(Option::from(Duration::new(3, 0))).expect("failed to set timeout");
                     if stream.read(&mut []).is_ok() {
@@ -56,4 +49,12 @@ fn main() {
             }
         }
     }
+}
+
+fn control(sequence: &str) {
+    std::process::Command::new("sh")
+        .arg("-c")
+        .arg(format!("../control.sh {}", sequence))
+        .spawn()
+        .expect("Failed to execute command");
 }
