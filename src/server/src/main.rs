@@ -11,9 +11,14 @@ fn handle_client(mut stream: TcpStream) {
         match stream.read(&mut contents) {
             Ok(_) => {
                 let contents: String = contents.as_mut().iter().map(|&c| c as char).collect();
+                if contents.starts_with("\0") {
+                    break;
+                }
                 for l in contents.lines().into_iter() {
+                    println!("Line: {:x?}", l);
                     if l.starts_with("GET / ") {
                         serve_html_file(&mut stream, "./src/index.html");
+                        capture_image();
                     }
                     if l.starts_with("GET /l") {
                         control("l");
@@ -23,9 +28,9 @@ fn handle_client(mut stream: TcpStream) {
                         control("r");
                         serve_html_file(&mut stream, "./src/redirect.html");
                     }
-                    if l.starts_with("GET /image.jpg") {
+                    if l.starts_with("GET /frame_0005.jpg") {
                         println!("serving image");
-                        serve_image_file(&mut stream, "./res/image.jpg");
+                        serve_image_file(&mut stream, "./res/frame_0005.jpg");
                     }
                 }
             }
@@ -60,7 +65,31 @@ fn control(sequence: &str) {
         .expect("Failed to execute command");
 }
 
-fn serve_html(mut stream: &mut TcpStream, html: &str) {
+fn capture_image() {
+    // capture image
+    println!("Capturing video");
+    let mut cmd = std::process::Command::new("../capture.sh")
+        .spawn()
+        .expect("Failed to execute command");
+    // w8 for the command to finish
+    let _ = cmd.wait().expect("Failed to wait for command");
+    // then segment the video
+    println!("Segmenting video");
+    let mut cmd = std::process::Command::new("../segment.sh")
+        .spawn()
+        .expect("Failed to execute command");
+    // w8 for the command to finish
+    let _ = cmd.wait().expect("Failed to wait for command");
+    // then move the last segment into res
+    println!("Moving image");
+    std::process::Command::new("mv")
+        .arg("./segments/frame_0005.jpg")
+        .arg("./res")
+        .spawn()
+        .expect("Failed to execute command");
+}
+
+fn serve_html(stream: &mut TcpStream, html: &str) {
     if stream.read(&mut []).is_ok() {
         match stream.write(html.as_bytes()) {
             Ok(_) => (),

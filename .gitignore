@@ -1,2 +1,6 @@
 /src/server/target/
 /src/server/.idea/
+/src/segments/
+/src/capture/
+/src/server/segments/
+/src/server/capture/
