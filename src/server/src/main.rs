@@ -34,7 +34,7 @@ fn handle_client(mut stream: TcpStream) {
 }
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:8080").expect("Failed to bind");
+    let listener = TcpListener::bind("0.0.0.0:8080").expect("Failed to bind");
     println!("Server listening on port 8080");
 
     for stream in listener.incoming() {
@@ -50,12 +50,10 @@ fn main() {
 }
 
 fn control(sequence: &str) {
-    std::process::Command::new("sh")
-        .arg("-c")
-        .arg(format!("../control.sh {}", sequence))
+    std::process::Command::new("../control.sh")
+        .arg(sequence)
         .spawn()
         .expect("Failed to execute command");
-
 }
 
 fn serve_html(mut stream: &mut TcpStream, html: &str) {
