@@ -11,11 +11,10 @@ fn handle_client(mut stream: TcpStream) {
         match stream.read(&mut contents) {
             Ok(_) => {
                 let contents: String = contents.as_mut().iter().map(|&c| c as char).collect();
-                if contents.starts_with("\0") {
+                if contents.starts_with("\0\0") {
                     break;
                 }
                 for l in contents.lines().into_iter() {
-                    println!("Line: {:x?}", l);
                     if l.starts_with("GET / ") {
                         serve_html_file(&mut stream, "./src/index.html");
                         capture_image();
