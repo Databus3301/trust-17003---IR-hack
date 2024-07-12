@@ -55,7 +55,7 @@ fn control(sequence: &str) {
         .arg(format!("../control.sh {}", sequence))
         .spawn()
         .expect("Failed to execute command");
-    
+
 }
 
 fn serve_html(mut stream: &mut TcpStream, html: &str) {
