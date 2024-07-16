@@ -18,3 +18,5 @@ This project aims to hack a Trust 17003 webcam to add infrared (IR) capabilities
     Bash
         minicom
     
+
+check out [doc](https://github.com/Databus3301/trust-17003---IR-hack/tree/main/doc) for my progress in cuircuit (dis)assemlby and sourrounding "infrastructure" builds
