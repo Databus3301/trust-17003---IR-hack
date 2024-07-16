@@ -7,10 +7,10 @@ This project aims to hack a Trust 17003 webcam to add infrared (IR) capabilities
 
     Trust 17003 webcam
     ESP8266 microcontroller
-    Power supply (suitable for ESP8266)
     Breadboard and jumper wires
     Soldering equipment
     Screwdrivers and other basic tools
+    Some copmuter serving as the server
 
 #### Used Software
     RustRover
